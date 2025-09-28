@@ -72,67 +72,71 @@ export default function DashboardPage() {
         )}
       </div>
       <div className="grid grid-cols-2 gap-3 mt-4">
-        {data.map((d: any) => (
-          <Card key={d.id}>
-            <CardContent>
-              <Badge
-                variant={d.isPublished ? "secondary" : "outline"}
-                className={cn(
-                  d.isPublished && "bg-green-500 text-white dark:bg-blue-600",
-                  "text-[10px] uppercase"
-                )}
-              >
-                {d.isPublished ? "Published" : "Draft"}
-              </Badge>
-              <h3 className="font-bold text-xl mt-2">{d.title}</h3>
-              <p className="text-slate-500">{d.description}</p>
+        {data.map((d: any) => {
+          if (!d.isPublished && userType === "examinee") return;
 
-              <Separator className="mt-5 mb-3" />
-              <div className="flex items-center justify-end gap-2">
-                {userType === "examiner" && (
-                  <>
-                    {!d.isPublished && (
-                      <Button
-                        onClick={() => handlePublish(d.id)}
-                        variant="outline"
-                        disabled={
-                          quizMutation.isPending && activeQuizId === d.id
-                        }
-                        className="cursor-pointer"
-                      >
-                        {quizMutation.isPending && activeQuizId === d.id && (
-                          <LoaderCircle className="animate-spin" size={18} />
-                        )}
-                        Publish Quiz
+          return (
+            <Card key={d.id}>
+              <CardContent>
+                <Badge
+                  variant={d.isPublished ? "secondary" : "outline"}
+                  className={cn(
+                    d.isPublished && "bg-green-500 text-white dark:bg-blue-600",
+                    "text-[10px] uppercase"
+                  )}
+                >
+                  {d.isPublished ? "Published" : "Draft"}
+                </Badge>
+                <h3 className="font-bold text-xl mt-2">{d.title}</h3>
+                <p className="text-slate-500">{d.description}</p>
+
+                <Separator className="mt-5 mb-3" />
+                <div className="flex items-center justify-end gap-2">
+                  {userType === "examiner" && (
+                    <>
+                      {!d.isPublished && (
+                        <Button
+                          onClick={() => handlePublish(d.id)}
+                          variant="outline"
+                          disabled={
+                            quizMutation.isPending && activeQuizId === d.id
+                          }
+                          className="cursor-pointer"
+                        >
+                          {quizMutation.isPending && activeQuizId === d.id && (
+                            <LoaderCircle className="animate-spin" size={18} />
+                          )}
+                          Publish Quiz
+                        </Button>
+                      )}
+
+                      <Button variant="outline" asChild>
+                        <Link
+                          className="inline-flex items-center gap-2"
+                          href={`/builder/${d.id}/view`}
+                        >
+                          View Quiz
+                        </Link>
                       </Button>
-                    )}
+                    </>
+                  )}
 
+                  {userType === "examinee" && (
                     <Button variant="outline" asChild>
                       <Link
                         className="inline-flex items-center gap-2"
-                        href={`/builder/${d.id}/view`}
+                        href={`/player`}
                       >
-                        View Quiz
+                        Take Quiz
+                        <ChevronRight size={18} />
                       </Link>
                     </Button>
-                  </>
-                )}
-
-                {userType === "examinee" && (
-                  <Button variant="outline" asChild>
-                    <Link
-                      className="inline-flex items-center gap-2"
-                      href={`/player`}
-                    >
-                      Take Quiz
-                      <ChevronRight size={18} />
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
