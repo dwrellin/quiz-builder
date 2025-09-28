@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
 
 import SkeletonLoader from "@/app/components/skeleton-loader";
 import ErrorCard from "@/app/components/error-card";
@@ -36,6 +37,7 @@ export default function ViewQuizPage() {
 
   const handleCopy = async (textToCopy: string) => {
     await navigator.clipboard.writeText(textToCopy);
+    toast.success("Quiz ID copied");
   };
 
   return (

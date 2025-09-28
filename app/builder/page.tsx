@@ -1,9 +1,11 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import { ChevronLeft, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,8 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
+import { useQuizContext } from "../providers/context-provider";
 import { createQuiz } from "@/lib/api";
-import { LoaderCircle } from "lucide-react";
 
 type QuizFormValues = {
   title: string;
@@ -22,6 +24,7 @@ type QuizFormValues = {
 
 export default function BuilderPage() {
   const router = useRouter();
+  const { userType } = useQuizContext();
 
   const { register, handleSubmit } = useForm<QuizFormValues>({
     defaultValues: {
@@ -37,7 +40,7 @@ export default function BuilderPage() {
       toast.success("Quiz successfully created");
       router.push(`/builder/${data.id}/new`);
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Something went wrong");
     },
   });
@@ -51,8 +54,20 @@ export default function BuilderPage() {
     });
   };
 
+  if (!userType) router.replace("/");
+
   return (
     <div className="w-full max-w-md">
+      <Button
+        variant="link"
+        className="flex justify-start gap-2 mb-2 -ml-3"
+        asChild
+      >
+        <Link href="/dashboard">
+          <ChevronLeft size={18} />
+          Back to Dashboard
+        </Link>
+      </Button>
       <Card>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>

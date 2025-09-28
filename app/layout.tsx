@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "./providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { QuizProvider } from "./providers/context-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +31,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} bg-slate-100 antialiased`}
       >
         <QueryProvider>
-          <div className="min-h-screen flex items-center justify-center">
-            {children}
-          </div>
+          <QuizProvider>
+            <div className="min-h-screen flex items-center justify-center">
+              {children}
+            </div>
+          </QuizProvider>
         </QueryProvider>
         <Toaster richColors />
       </body>
