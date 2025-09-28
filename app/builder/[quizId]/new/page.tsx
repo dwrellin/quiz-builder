@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
+import { useQuizContext } from "@/app/providers/context-provider";
 import SkeletonLoader from "@/app/components/skeleton-loader";
 import ErrorCard from "@/app/components/error-card";
 import QuizForm from "./quiz-form";
@@ -23,6 +24,8 @@ export default function NewQuizPage() {
   const quizId = params.quizId;
 
   const router = useRouter();
+
+  const { userType } = useQuizContext();
 
   const { register, control, handleSubmit, watch } = useForm<FormValues>({
     defaultValues: {
@@ -88,6 +91,8 @@ export default function NewQuizPage() {
   }
 
   if (isError) return <ErrorCard error={error} />;
+
+  if (!userType) router.replace("/");
 
   return (
     <Card>

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -10,14 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 
+import { useQuizContext } from "@/app/providers/context-provider";
 import SkeletonLoader from "@/app/components/skeleton-loader";
 import ErrorCard from "@/app/components/error-card";
 
 import { fetchQuizById } from "@/lib/api";
 
 export default function ViewQuizPage() {
+  const router = useRouter();
   const params = useParams();
   const quizId = params.quizId;
+  const { userType } = useQuizContext();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["quiz", quizId],
@@ -33,7 +36,7 @@ export default function ViewQuizPage() {
 
   if (isError) return <ErrorCard error={error} />;
 
-  console.log("hello world", isError, error);
+  if (!userType) router.replace("/");
 
   const handleCopy = async (textToCopy: string) => {
     await navigator.clipboard.writeText(textToCopy);
@@ -58,31 +61,42 @@ export default function ViewQuizPage() {
 
         <h3 className="font-medium text-xl">Questions:</h3>
         {/* TODO: Fix types here */}
-        {data.questions.map((d: any, i: any) => (
-          <Card className="mt-3 mb-8 last:mb-0">
-            <CardContent>
-              <div className="flex items-center gap-3 mb-3">
-                <p className="font-bold text-3xl">{i + 1}</p>
-                <p>{d.prompt}</p>
-              </div>
+        {data.questions.length < 1 ? (
+          <div className="text-center mt-4 mb-6">
+            <h4 className="font-medium text-slate-500 text-center">
+              No questions posted — yet.
+            </h4>
+            <Button variant="link" className="underline" asChild>
+              <Link href={`/builder/${data.id}/new`}>Add Questions</Link>
+            </Button>
+          </div>
+        ) : (
+          data.questions.map((d: any, i: any) => (
+            <Card className="mt-3 mb-8 last:mb-0">
+              <CardContent>
+                <div className="flex items-center gap-3 mb-3">
+                  <p className="font-bold text-3xl">{i + 1}</p>
+                  <p>{d.prompt}</p>
+                </div>
 
-              {d.options &&
-                d.options.map((o: any) => (
-                  <Button
-                    variant={o === d.correctAnswer ? "default" : "outline"}
-                    className="p-6 w-full justify-start mb-3 pointer-events-none"
-                  >
-                    {o}
-                  </Button>
-                ))}
+                {d.options &&
+                  d.options.map((o: any) => (
+                    <Button
+                      variant={o === d.correctAnswer ? "default" : "outline"}
+                      className="p-6 w-full justify-start mb-3 pointer-events-none"
+                    >
+                      {o}
+                    </Button>
+                  ))}
 
-              <p className="mt-3">
-                Correct Answer:{" "}
-                <span className="font-bold">{d.correctAnswer}</span>
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+                <p className="mt-3">
+                  Correct Answer:{" "}
+                  <span className="font-bold">{d.correctAnswer}</span>
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        )}
 
         <div className="text-right">
           <Button asChild>
