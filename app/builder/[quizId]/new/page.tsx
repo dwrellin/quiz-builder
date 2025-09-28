@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -12,6 +12,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
+import SkeletonLoader from "@/app/components/skeleton-loader";
+import ErrorCard from "@/app/components/error-card";
 import QuizForm from "./quiz-form";
 import { FormValues } from "./types";
 import { addQuestions, fetchQuizById } from "@/lib/api";
@@ -20,20 +22,20 @@ export default function NewQuizPage() {
   const params = useParams();
   const quizId = params.quizId;
 
-  const { register, control, handleSubmit, watch, reset } = useForm<FormValues>(
-    {
-      defaultValues: {
-        questions: [
-          {
-            type: "mcq",
-            prompt: "",
-            options: [{ value: "" }],
-            correctAnswer: "",
-          },
-        ],
-      },
-    }
-  );
+  const router = useRouter();
+
+  const { register, control, handleSubmit, watch } = useForm<FormValues>({
+    defaultValues: {
+      questions: [
+        {
+          type: "mcq",
+          prompt: "",
+          options: [{ value: "" }],
+          correctAnswer: "",
+        },
+      ],
+    },
+  });
 
   const {
     fields: questions,
@@ -65,7 +67,7 @@ export default function NewQuizPage() {
       );
 
       toast.success("Quiz submitted successfully");
-      reset();
+      router.push(`/builder/${quizId}/view`);
     } catch (error) {
       toast.error("Something went wrong with submission", {
         description: error instanceof Error ? error.message : "Unknown error",
@@ -81,47 +83,41 @@ export default function NewQuizPage() {
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return <SkeletonLoader />;
+  }
 
-  if (isError)
-    return (
-      <div>
-        Something went wrong
-        <p>{error.toString()}</p>
-      </div>
-    );
+  if (isError) return <ErrorCard error={error} />;
 
   return (
-    <div className="m-auto my-12 max-w-xl">
-      <Card>
-        <CardContent>
-          <h2 className="text-xl font-bold">{data.title}</h2>
-          <p className="text-sm mb-6">{data.description}</p>
+    <Card>
+      <CardContent>
+        <h2 className="text-xl font-bold">{data.title}</h2>
+        <p className="text-sm mb-6">{data.description}</p>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <QuizForm
-              questions={questions}
-              register={register}
-              control={control}
-              watch={watch}
-              append={append}
-              remove={remove}
-            />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <QuizForm
+            questions={questions}
+            register={register}
+            control={control}
+            watch={watch}
+            append={append}
+            remove={remove}
+          />
 
-            <Separator />
-            <Button
-              disabled={quizMutation.isPending}
-              type="submit"
-              className="flex gap-2 cursor-pointer w-full"
-            >
-              {quizMutation.isPending && (
-                <LoaderCircle className="animate-spin" size={18} />
-              )}
-              Submit Quiz
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          <Separator />
+          <Button
+            disabled={quizMutation.isPending}
+            type="submit"
+            className="flex gap-2 cursor-pointer w-full"
+          >
+            {quizMutation.isPending && (
+              <LoaderCircle className="animate-spin" size={18} />
+            )}
+            Submit Quiz
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
