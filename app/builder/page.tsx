@@ -38,7 +38,6 @@ export default function BuilderPage() {
       router.push(`/builder/${data.id}/new`);
     },
     onError: (error) => {
-      console.log("hello world", error);
       toast.error("Something went wrong");
     },
   });
