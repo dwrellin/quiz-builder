@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next JS Quiz Builder App
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create an `.env` file in the project root.
+
+```bash
+NEXT_PUBLIC_BASE_URL=http://localhost:4000 // or whatever port your server side code is pointed to
+NEXT_PUBLIC_API_TOKEN=FAKE-API-TOKEN-123456789 // can be anything, btw
+```
+
+Once done, you can now run the app locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Things to know about the app
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- It doesn't have an auth / doesn't save to `localStorage`, so it doesn't persist whether you're an examiner/examinee. Once you refresh the page, you'll be redirected to the landing page again to choose.
+- Additionally, if you refresh, you'll lose your progress (e.g. constructing the quiz's questions/prompts).
+- Currently, there's no way to update the questions once you submit it. You can only add / view questions.
+- It doesn't accept indices as answers in MCQ questions/prompts as mentioned in the requirements. It only accepts the string equivalent.
+- I wasn't able to add `code` as a question type.
