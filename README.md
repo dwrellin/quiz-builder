@@ -30,3 +30,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Currently, there's no way to update the questions once you submit it. You can only add / view questions.
 - It doesn't accept indices as answers in MCQ questions/prompts as mentioned in the requirements. It only accepts the string equivalent.
 - I wasn't able to add `code` as a question type.
+- Some of the components use `any` as type 😅
