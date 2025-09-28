@@ -4,16 +4,17 @@ import * as React from "react";
 import { useParams } from "next/navigation";
 
 import { useFieldArray, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 import QuizForm from "./quiz-form";
 import { FormValues } from "./types";
-import { addQuestions } from "@/lib/api";
-import { LoaderCircle } from "lucide-react";
+import { addQuestions, fetchQuizById } from "@/lib/api";
 
 export default function NewQuizPage() {
   const params = useParams();
@@ -45,27 +46,58 @@ export default function NewQuizPage() {
 
   const quizMutation = useMutation({
     mutationFn: ({ payload }: { payload: any }) => addQuestions(payload),
-    onSuccess: () => reset(),
   });
 
-  const onSubmit = (data: FormValues) => {
-    if (!quizId) return;
+  const onSubmit = async (data: FormValues) => {
+    try {
+      if (!quizId) return;
 
-    data.questions.map((q) => {
-      quizMutation.mutate({
-        payload: {
-          quizId,
-          ...q,
-          options: q.type === "mcq" ? q.options.map((c) => c.value) : [],
-        },
+      await Promise.all(
+        data.questions.map((q) => {
+          return quizMutation.mutateAsync({
+            payload: {
+              quizId,
+              ...q,
+              options: q.type === "mcq" ? q.options.map((c) => c.value) : [],
+            },
+          });
+        })
+      );
+
+      toast.success("Quiz submitted successfully");
+      reset();
+    } catch (error) {
+      toast.error("Something went wrong with submission", {
+        description: error instanceof Error ? error.message : "Unknown error",
       });
-    });
+    }
   };
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["quiz", quizId],
+    queryFn: ({ queryKey }) => {
+      const [_key, id] = queryKey;
+      return fetchQuizById(id as string);
+    },
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (isError)
+    return (
+      <div>
+        Something went wrong
+        <p>{error.toString()}</p>
+      </div>
+    );
 
   return (
     <div className="m-auto my-12 max-w-xl">
       <Card>
         <CardContent>
+          <h2 className="text-xl font-bold">{data.title}</h2>
+          <p className="text-sm mb-6">{data.description}</p>
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <QuizForm
               questions={questions}
