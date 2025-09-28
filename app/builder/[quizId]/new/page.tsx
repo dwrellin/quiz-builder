@@ -92,8 +92,8 @@ export default function NewQuizPage() {
   return (
     <Card>
       <CardContent>
-        <h2 className="text-xl font-bold">{data.title}</h2>
-        <p className="text-sm mb-6">{data.description}</p>
+        <h2 className="text-2xl font-bold">{data.title}</h2>
+        <p className="text-slate-500 mb-6">{data.description}</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <QuizForm

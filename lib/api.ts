@@ -1,30 +1,47 @@
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN;
+
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${API_TOKEN}`,
+};
+
 export async function fetchQuizzes() {
-  const response = await fetch("/api/quizzes");
-  if (!response.ok) throw new Error("Failed to fetch quizzes");
-  return response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/quizzes`, {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch quizzes");
+    return await response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error("Unknown error");
+  }
 }
 
 export async function fetchQuizById(quizId: string) {
   try {
-    const response = await fetch(`/api/quizzes/${quizId}`);
+    const response = await fetch(`${BASE_URL}/quizzes/${quizId}`, {
+      method: "GET",
+      headers,
+    });
+
     if (!response.ok) throw new Error("Failed to fetch quiz");
 
     const data = await response.json();
     return data;
   } catch (error) {
-    return error;
+    throw error instanceof Error ? error : new Error("Unknown error");
   }
 }
 
 // Create quizzes
 export async function createQuiz(payload: any) {
   try {
-    const response = await fetch("/api/quizzes", {
+    const response = await fetch(`${BASE_URL}/quizzes`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-      },
+      headers,
       body: JSON.stringify(payload),
     });
 
@@ -33,56 +50,50 @@ export async function createQuiz(payload: any) {
     const data = response.json();
     return data;
   } catch (error) {
-    return error;
+    throw error instanceof Error ? error : new Error("Unknown error");
   }
 }
 
 // Update quiz
 export async function updateQuizStatus(quizId: string) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/quizzes/${quizId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-        },
-        body: JSON.stringify({
-          isPublished: true,
-        }),
-      }
-    );
+    const response = await fetch(`${BASE_URL}/quizzes/${quizId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({
+        isPublished: true,
+      }),
+    });
 
     if (!response.ok) throw new Error("Failed to update quiz's status");
 
     const data = await response.json();
-    return {
-      data,
-      status: 200,
-    };
+    return data;
   } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : "Unknown error",
-      status: 500,
-    };
+    throw error instanceof Error ? error : new Error("Unknown error");
   }
 }
 
 // Insert questions to quizId
 export async function addQuestions(payload: any) {
-  const response = await fetch(`/api/quizzes/${payload.quizId}/questions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-    },
-    body: JSON.stringify({
-      ...payload,
-      quizId: +payload.quizId,
-    }),
-  });
+  try {
+    const response = await fetch(
+      `${BASE_URL}/quizzes/${payload.quizId}/questions`,
+      {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          ...payload,
+          quizId: +payload.quizId,
+        }),
+      }
+    );
 
-  if (!response.ok) throw new Error("Failed to add questions");
-  return response.json();
+    if (!response.ok) throw new Error("Failed to add questions to quiz");
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error instanceof Error ? error : new Error("Unknown error");
+  }
 }

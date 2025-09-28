@@ -4,7 +4,7 @@ import React from "react";
 
 export default function ErrorCard({ error }: { error?: any }) {
   return (
-    <Card className="w-full max-w-md shadow-lg">
+    <Card className="gap-2 w-full">
       <CardHeader className="flex flex-col items-center">
         <AlertCircle className="size-12 text-red-500" />
         <CardTitle className="mt-4 text-center text-xl font-semibold">

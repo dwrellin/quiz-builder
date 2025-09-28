@@ -52,7 +52,7 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="m-auto mt-12 max-w-md">
+    <div className="w-full max-w-md">
       <Card>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>

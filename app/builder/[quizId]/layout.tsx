@@ -5,5 +5,5 @@ export default function QuizBuilderPageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="m-auto my-12 max-w-xl">{children}</div>;
+  return <div className="w-full my-12 max-w-xl">{children}</div>;
 }

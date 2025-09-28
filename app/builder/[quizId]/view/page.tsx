@@ -32,6 +32,8 @@ export default function ViewQuizPage() {
 
   if (isError) return <ErrorCard error={error} />;
 
+  console.log("hello world", isError, error);
+
   const handleCopy = async (textToCopy: string) => {
     await navigator.clipboard.writeText(textToCopy);
   };

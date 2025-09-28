@@ -47,6 +47,7 @@ export default function DashboardPage() {
     quizMutation.mutateAsync(quizId);
   };
 
+  // TODO: Replace this with an actual loader
   if (isLoading) return <p>Loading...</p>;
 
   if (isError) {
