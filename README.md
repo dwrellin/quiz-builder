@@ -26,6 +26,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Architectural decisions and trade-offs
 
 - I didn't implement entering a quiz by inputing `quizId`. I went with a quiz list where the examinee will just click on "Take Quiz" for better (I'd like to think so) user experience.
+- Viewing the test score results had to be manually checked because having a `useQuery` inside `useEffect` causes it to re-render. Might also be due to React's strict mode.
 
 ## Things to know about the app
 
