@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { useMutation } from "@tanstack/react-query";
@@ -12,11 +12,17 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+import { useQuizContext } from "@/app/providers/context-provider";
+
 import { submitQuiz } from "@/lib/api";
 
 export default function QuizResultPage() {
   const searchParams = useSearchParams();
   const attemptId = searchParams.get("aid");
+
+  const router = useRouter();
+
+  const { userType } = useQuizContext();
 
   const submitQuizMutation = useMutation({
     mutationFn: (attemptId: string) => submitQuiz(attemptId),
@@ -34,6 +40,8 @@ export default function QuizResultPage() {
     if (!attemptId) return;
     submitQuizMutation.mutate(attemptId);
   };
+
+  if (!userType) router.replace("/");
 
   return (
     <Card>

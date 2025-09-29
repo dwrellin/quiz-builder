@@ -2,22 +2,24 @@
 
 import * as React from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
+import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 import ErrorCard from "@/app/components/error-card";
 import SkeletonLoader from "@/app/components/skeleton-loader";
+import { useQuizContext } from "@/app/providers/context-provider";
 
-import { answerQuestionById, fetchQuizById } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { answerQuestionById, fetchQuizById } from "@/lib/api";
 
 export default function QuizPlayerPage() {
   const params = useParams();
@@ -28,6 +30,8 @@ export default function QuizPlayerPage() {
   const qNumber = searchParams.get("n");
 
   const router = useRouter();
+
+  const { userType } = useQuizContext();
 
   const { register, watch, setValue, reset, handleSubmit } = useForm();
 
@@ -86,6 +90,8 @@ export default function QuizPlayerPage() {
   };
 
   const selected = watch("answer");
+
+  if (!userType) router.replace("/");
 
   return (
     <Card className="my-12">
