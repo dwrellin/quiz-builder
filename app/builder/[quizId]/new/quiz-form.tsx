@@ -117,7 +117,7 @@ export default function QuizForm({
                         <SelectContent>
                           <SelectGroup>
                             {watchedChoices
-                              .filter((c) => c.value.trim() !== "") // Just another checker for empty values
+                              .filter((c) => c.value.trim() !== "")
                               .map((choice, i) => (
                                 <SelectItem key={i} value={choice.value}>
                                   {choice.value}

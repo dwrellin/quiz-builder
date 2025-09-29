@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
-import { fetchQuizzes, updateQuizStatus } from "@/lib/api";
+import { fetchQuizzes, startQuiz, updateQuizStatus } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 import ErrorCard from "../components/error-card";
@@ -39,6 +39,19 @@ export default function DashboardPage() {
       queryClient.invalidateQueries({ queryKey: ["quizzes"] });
     },
     onSettled: () => setActiveQuizId(null),
+    onError: (error) => {
+      toast.error("Something went wrong", {
+        description: error.toString(),
+      });
+    },
+  });
+
+  const takeQuizMutation = useMutation({
+    mutationFn: (quizId: string) => startQuiz(quizId),
+    onSuccess: (data) => {
+      toast.success("Starting the quiz. Good luck!");
+      router.push(`/quiz/${data.quizId}/question?n=1&aid=${data.id}`);
+    },
     onError: (error) => {
       toast.error("Something went wrong", {
         description: error.toString(),
@@ -122,14 +135,13 @@ export default function DashboardPage() {
                   )}
 
                   {userType === "examinee" && (
-                    <Button variant="outline" asChild>
-                      <Link
-                        className="inline-flex items-center gap-2"
-                        href={`/player`}
-                      >
-                        Take Quiz
-                        <ChevronRight size={18} />
-                      </Link>
+                    <Button
+                      onClick={() => takeQuizMutation.mutate(d.id)}
+                      variant="outline"
+                      className="cursor-pointer items-center gap-2"
+                    >
+                      Take Quiz
+                      <ChevronRight size={18} />
                     </Button>
                   )}
                 </div>

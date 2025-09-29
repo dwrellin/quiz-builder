@@ -60,7 +60,6 @@ export default function ViewQuizPage() {
         <p className="text-slate-500 mb-6">{data.description}</p>
 
         <h3 className="font-medium text-xl">Questions:</h3>
-        {/* TODO: Fix types here */}
         {data.questions.length < 1 ? (
           <div className="text-center mt-4 mb-6">
             <h4 className="font-medium text-slate-500 text-center">
@@ -71,6 +70,7 @@ export default function ViewQuizPage() {
             </Button>
           </div>
         ) : (
+          // TODO: Fix types
           data.questions.map((d: any, i: any) => (
             <Card className="mt-3 mb-8 last:mb-0">
               <CardContent>

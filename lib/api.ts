@@ -13,24 +13,38 @@ export async function fetchQuizzes() {
       headers,
     });
 
-    if (!response.ok) throw new Error("Failed to fetch quizzes");
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
     return await response.json();
   } catch (error) {
     throw error instanceof Error ? error : new Error("Unknown error");
   }
 }
 
-export async function fetchQuizById(quizId: string) {
+export async function fetchQuizById(quizId: string, index?: number) {
   try {
     const response = await fetch(`${BASE_URL}/quizzes/${quizId}`, {
       method: "GET",
       headers,
     });
 
-    if (!response.ok) throw new Error("Failed to fetch quiz");
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
 
     const data = await response.json();
-    return data;
+
+    if (!index) return data;
+    // For examiner response
+    else {
+      return {
+        ...data,
+        questions: data.questions[index - 1],
+      };
+    }
   } catch (error) {
     throw error instanceof Error ? error : new Error("Unknown error");
   }
@@ -45,7 +59,10 @@ export async function createQuiz(payload: any) {
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) throw new Error("Failed to create quiz");
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
 
     const data = response.json();
     return data;
@@ -65,7 +82,10 @@ export async function updateQuizStatus(quizId: string) {
       }),
     });
 
-    if (!response.ok) throw new Error("Failed to update quiz's status");
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
 
     const data = await response.json();
     return data;
@@ -89,7 +109,73 @@ export async function addQuestions(payload: any) {
       }
     );
 
-    if (!response.ok) throw new Error("Failed to add questions to quiz");
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error instanceof Error ? error : new Error("Unknown error");
+  }
+}
+
+// Start quiz
+export async function startQuiz(quizId: string) {
+  try {
+    const response = await fetch(`${BASE_URL}/attempts/`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ quizId }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error instanceof Error ? error : new Error("Unknown error");
+  }
+}
+
+// Upsert answer
+export async function answerQuestionById(attemptId: string, payload: any) {
+  try {
+    const response = await fetch(`${BASE_URL}/attempts/${attemptId}/answer`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error instanceof Error ? error : new Error("Unknown error");
+  }
+}
+
+// Submit quiz
+export async function submitQuiz(attemptId: string) {
+  try {
+    const response = await fetch(`${BASE_URL}/attempts/${attemptId}/submit`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
 
     const data = await response.json();
     return data;
