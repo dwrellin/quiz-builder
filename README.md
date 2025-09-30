@@ -21,6 +21,22 @@ Once done, you can now run the app locally
 npm run dev
 ```
 
+## Recommended (for best user-experience)
+
+Run the app in production mode
+
+Build it first (make sure to have dependencies installed):
+
+```bash
+npm run build
+```
+
+Then run this command
+
+```bash
+npm start
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Architectural decisions and trade-offs
