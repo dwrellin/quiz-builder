@@ -22,7 +22,7 @@ import { useQuizContext } from "../providers/context-provider";
 
 export default function DashboardPage() {
   const queryClient = useQueryClient();
-  const { userType } = useQuizContext();
+  const { userType, setUserType } = useQuizContext();
   const router = useRouter();
 
   const [activeQuizId, setActiveQuizId] = React.useState<string | null>(null);
@@ -78,11 +78,16 @@ export default function DashboardPage() {
     <div className="max-w-4xl mx-auto my-12">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Quizzes</h2>
-        {userType === "examiner" && (
-          <Button asChild>
-            <Link href="/builder">Create New Quiz</Link>
+        <div className="flex gap-2">
+          {userType === "examiner" && (
+            <Button asChild>
+              <Link href="/builder">Create New Quiz</Link>
+            </Button>
+          )}
+          <Button onClick={() => setUserType(null)} className="cursor-pointer">
+            Logout
           </Button>
-        )}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-3 mt-4">
         {data.map((d: any) => {
