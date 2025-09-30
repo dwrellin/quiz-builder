@@ -11,8 +11,8 @@ npm install
 Create an `.env` file in the project root.
 
 ```bash
-NEXT_PUBLIC_BASE_URL=http://localhost:4000 // or whatever port your server side code is pointed to
-NEXT_PUBLIC_API_TOKEN=FAKE-API-TOKEN-123456789 // can be anything, btw
+NEXT_PUBLIC_BASE_URL=http://localhost:4000 # or whatever port your server side code is pointed to
+NEXT_PUBLIC_API_TOKEN=FAKE-API-TOKEN-123456789 # can be anything, btw
 ```
 
 Once done, you can now run the app locally
