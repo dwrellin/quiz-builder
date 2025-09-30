@@ -25,7 +25,6 @@ import { useQuizContext } from "@/app/providers/context-provider";
 import { fetchQuizById, submitQuiz } from "@/lib/api";
 import SkeletonLoader from "@/app/components/skeleton-loader";
 import ErrorCard from "@/app/components/error-card";
-import { cn } from "@/lib/utils";
 
 export default function QuizResultPage() {
   const searchParams = useSearchParams();
