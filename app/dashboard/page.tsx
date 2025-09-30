@@ -139,7 +139,13 @@ export default function DashboardPage() {
                       onClick={() => takeQuizMutation.mutate(d.id)}
                       variant="outline"
                       className="cursor-pointer items-center gap-2"
+                      disabled={
+                        takeQuizMutation.isPending && activeQuizId === d.id
+                      }
                     >
+                      {takeQuizMutation.isPending && activeQuizId === d.id && (
+                        <LoaderCircle className="animate-spin" size={18} />
+                      )}
                       Take Quiz
                       <ChevronRight size={18} />
                     </Button>

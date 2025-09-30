@@ -23,7 +23,7 @@ export async function fetchQuizzes() {
   }
 }
 
-export async function fetchQuizById(quizId: string, index?: number) {
+export async function fetchQuizById(quizId: string) {
   try {
     const response = await fetch(`${BASE_URL}/quizzes/${quizId}`, {
       method: "GET",
@@ -37,14 +37,7 @@ export async function fetchQuizById(quizId: string, index?: number) {
 
     const data = await response.json();
 
-    if (!index) return data;
-    // For examiner response
-    else {
-      return {
-        ...data,
-        questions: data.questions[index - 1],
-      };
-    }
+    return data;
   } catch (error) {
     throw error instanceof Error ? error : new Error("Unknown error");
   }
