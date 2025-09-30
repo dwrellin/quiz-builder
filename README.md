@@ -43,6 +43,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - I didn't implement entering a quiz by inputing `quizId`. I went with a quiz list where the examinee will just click on "Take Quiz" for better (I'd like to think so) user experience.
 - Viewing the test score results had to be manually checked because having a `useQuery` inside `useEffect` causes it to re-render. Might also be due to React's strict mode.
+- No timer and anti-cheat were implemented.
 
 ## Things to know about the app
 
@@ -50,6 +51,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Additionally, if you refresh, you'll lose your progress (e.g. constructing the quiz's questions/prompts).
 - Currently, there's no way to update the questions once you submit it. You can only add / view questions.
 - It doesn't support going back to questions you've previously answered.
-- It doesn't accept indices as answers in MCQ questions/prompts as mentioned in the requirements. It only accepts the string equivalent.
+- It doesn't accept indices as answers in MCQ questions/prompts. It only accepts the string equivalent.
 - I wasn't able to add `code` as a question type.
 - Some of the components use `any` as type 😅

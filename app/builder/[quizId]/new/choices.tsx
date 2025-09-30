@@ -1,10 +1,13 @@
 import * as React from "react";
+
 import { Control, Controller, useFieldArray } from "react-hook-form";
-import { FormValues } from "./types";
+import { Plus, X } from "lucide-react";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
+
+import { FormValues } from "./types";
 
 export default function Choices({
   control,
