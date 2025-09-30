@@ -75,7 +75,7 @@ export default function DashboardPage() {
   if (!userType) router.replace("/");
 
   return (
-    <div className="max-w-4xl mx-auto my-12">
+    <div className="min-h-[calc(100vh-48px)] max-w-4xl mx-auto my-12">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Quizzes</h2>
         <div className="flex gap-2">
@@ -94,7 +94,7 @@ export default function DashboardPage() {
           if (!d.isPublished && userType === "examinee") return;
 
           return (
-            <Card key={d.id}>
+            <Card key={d.id} className="min-w-80">
               <CardContent>
                 <Badge
                   variant={d.isPublished ? "secondary" : "outline"}
