@@ -104,6 +104,8 @@ export async function addQuestions(
         body: JSON.stringify({
           ...payload,
           quizId: +payload.quizId,
+          options:
+            payload.type === "mcq" ? payload.options.map((o) => o.value) : [],
         }),
       }
     );
