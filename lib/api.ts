@@ -1,3 +1,5 @@
+import { Question, QuizAnswer, QuizFormValues } from "./types";
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN;
 
@@ -44,7 +46,7 @@ export async function fetchQuizById(quizId: string) {
 }
 
 // Create quizzes
-export async function createQuiz(payload: any) {
+export async function createQuiz(payload: QuizFormValues) {
   try {
     const response = await fetch(`${BASE_URL}/quizzes`, {
       method: "POST",
@@ -88,7 +90,11 @@ export async function updateQuizStatus(quizId: string) {
 }
 
 // Insert questions to quizId
-export async function addQuestions(payload: any) {
+export async function addQuestions(
+  payload: Question & {
+    quizId: string;
+  }
+) {
   try {
     const response = await fetch(
       `${BASE_URL}/quizzes/${payload.quizId}/questions`,
@@ -136,7 +142,10 @@ export async function startQuiz(quizId: string) {
 }
 
 // Upsert answer
-export async function answerQuestionById(attemptId: string, payload: any) {
+export async function answerQuestionById(
+  attemptId: string,
+  payload: QuizAnswer
+) {
   try {
     const response = await fetch(`${BASE_URL}/attempts/${attemptId}/answer`, {
       method: "POST",

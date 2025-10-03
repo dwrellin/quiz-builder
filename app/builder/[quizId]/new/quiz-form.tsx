@@ -8,6 +8,7 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,10 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+
+import { Question, QuestionFormValues } from "@/lib/types";
 
 import Choices from "./choices";
-import { FormValues, Question } from "./types";
-import { Separator } from "@/components/ui/separator";
 
 export default function QuizForm({
   questions,
@@ -34,10 +36,10 @@ export default function QuizForm({
   remove,
 }: {
   questions: Question[];
-  register: UseFormRegister<FormValues>;
-  control: Control<FormValues>;
-  watch: UseFormWatch<FormValues>;
-  append: UseFieldArrayAppend<FormValues, "questions">;
+  register: UseFormRegister<QuestionFormValues>;
+  control: Control<QuestionFormValues>;
+  watch: UseFormWatch<QuestionFormValues>;
+  append: UseFieldArrayAppend<QuestionFormValues, "questions">;
   remove: UseFieldArrayRemove;
 }) {
   return questions.map((__, i: number) => {

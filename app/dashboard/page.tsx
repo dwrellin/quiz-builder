@@ -13,12 +13,13 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
-import { fetchQuizzes, startQuiz, updateQuizStatus } from "@/lib/api";
-import { cn } from "@/lib/utils";
-
 import ErrorCard from "../components/error-card";
 import SkeletonLoader from "../components/skeleton-loader";
 import { useQuizContext } from "../providers/context-provider";
+
+import { fetchQuizzes, startQuiz, updateQuizStatus } from "@/lib/api";
+import { cn } from "@/lib/utils";
+import { Quiz } from "@/lib/types";
 
 export default function DashboardPage() {
   const queryClient = useQueryClient();
@@ -69,7 +70,7 @@ export default function DashboardPage() {
   if (isLoading) return <SkeletonLoader />;
 
   if (isError) {
-    return <ErrorCard error={error} />;
+    return <ErrorCard error={error.toString()} />;
   }
 
   if (!userType) router.replace("/");
@@ -90,7 +91,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3 mt-4">
-        {data.map((d: any) => {
+        {data.map((d: Quiz) => {
           if (!d.isPublished && userType === "examinee") return;
 
           return (

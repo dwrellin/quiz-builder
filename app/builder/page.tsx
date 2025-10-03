@@ -16,11 +16,7 @@ import { toast } from "sonner";
 
 import { useQuizContext } from "../providers/context-provider";
 import { createQuiz } from "@/lib/api";
-
-type QuizFormValues = {
-  title: string;
-  description: string;
-};
+import { QuizFormValues } from "@/lib/types";
 
 export default function BuilderPage() {
   const router = useRouter();

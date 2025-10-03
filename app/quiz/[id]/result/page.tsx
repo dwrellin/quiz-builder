@@ -21,10 +21,16 @@ import {
 } from "@/components/ui/table";
 
 import { useQuizContext } from "@/app/providers/context-provider";
-
-import { fetchQuizById, submitQuiz } from "@/lib/api";
 import SkeletonLoader from "@/app/components/skeleton-loader";
 import ErrorCard from "@/app/components/error-card";
+
+import { fetchQuizById, submitQuiz } from "@/lib/api";
+import {
+  QuestionFromDB,
+  Result,
+  ResultDetails,
+  ResultDetailsWithCorrectAnswer,
+} from "@/lib/types";
 
 export default function QuizResultPage() {
   const searchParams = useSearchParams();
@@ -60,7 +66,7 @@ export default function QuizResultPage() {
   });
 
   if (isLoading) return <SkeletonLoader />;
-  if (isError) return <ErrorCard error={error} />;
+  if (isError) return <ErrorCard error={error.toString()} />;
 
   const handleViewResult = () => {
     if (!attemptId) return;
@@ -71,8 +77,10 @@ export default function QuizResultPage() {
 
   const merged = submitQuizMutation.data && {
     ...submitQuizMutation.data,
-    details: submitQuizMutation.data.details.map((sqm: any) => {
-      const q = data.questions.find((q: any) => q.id === sqm.questionId);
+    details: submitQuizMutation.data.details.map((sqm: ResultDetails) => {
+      const q = data.questions.find(
+        (q: QuestionFromDB & { id: number }) => q.id === sqm.questionId
+      );
       return {
         ...sqm,
         correctAnswer: q.correctAnswer || null,
@@ -119,23 +127,25 @@ export default function QuizResultPage() {
                   </TableHeader>
                   <TableBody>
                     {merged &&
-                      merged.details.map((d: any) => (
-                        <TableRow key={d.questionId}>
-                          <TableCell className="font-bold">
-                            {d.correctAnswer}
-                          </TableCell>
-                          <TableCell>
-                            {d.correct ? (
-                              <Check
-                                size={18}
-                                className="text-green-500 mx-auto"
-                              />
-                            ) : (
-                              <X size={18} className="text-red-500 mx-auto" />
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      merged.details.map(
+                        (d: ResultDetailsWithCorrectAnswer) => (
+                          <TableRow key={d.questionId}>
+                            <TableCell className="font-bold">
+                              {d.correctAnswer}
+                            </TableCell>
+                            <TableCell>
+                              {d.correct ? (
+                                <Check
+                                  size={18}
+                                  className="text-green-500 mx-auto"
+                                />
+                              ) : (
+                                <X size={18} className="text-red-500 mx-auto" />
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
                   </TableBody>
                 </Table>
               </div>
@@ -164,7 +174,7 @@ export default function QuizResultPage() {
   );
 }
 
-function CongratsCard({ data }: { data: any }) {
+function CongratsCard({ data }: { data: Result }) {
   const { score } = data;
 
   return (
@@ -180,7 +190,7 @@ function CongratsCard({ data }: { data: any }) {
   );
 }
 
-function FailedCard({ data }: { data: any }) {
+function FailedCard({ data }: { data: Result }) {
   const { score } = data;
 
   return (

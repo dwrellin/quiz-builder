@@ -15,30 +15,32 @@ import { toast } from "sonner";
 import { useQuizContext } from "@/app/providers/context-provider";
 import SkeletonLoader from "@/app/components/skeleton-loader";
 import ErrorCard from "@/app/components/error-card";
-import QuizForm from "./quiz-form";
-import { FormValues } from "./types";
 import { addQuestions, fetchQuizById } from "@/lib/api";
+import { Question, QuestionFormValues } from "@/lib/types";
+
+import QuizForm from "./quiz-form";
 
 export default function NewQuizPage() {
   const params = useParams();
-  const quizId = params.quizId;
+  const quizId = params.quizId as string;
 
   const router = useRouter();
 
   const { userType } = useQuizContext();
 
-  const { register, control, handleSubmit, watch } = useForm<FormValues>({
-    defaultValues: {
-      questions: [
-        {
-          type: "mcq",
-          prompt: "",
-          options: [{ value: "" }],
-          correctAnswer: "",
-        },
-      ],
-    },
-  });
+  const { register, control, handleSubmit, watch } =
+    useForm<QuestionFormValues>({
+      defaultValues: {
+        questions: [
+          {
+            type: "mcq",
+            prompt: "",
+            options: [{ value: "" }],
+            correctAnswer: "",
+          },
+        ],
+      },
+    });
 
   const {
     fields: questions,
@@ -50,10 +52,16 @@ export default function NewQuizPage() {
   });
 
   const quizMutation = useMutation({
-    mutationFn: ({ payload }: { payload: any }) => addQuestions(payload),
+    mutationFn: ({
+      payload,
+    }: {
+      payload: Question & {
+        quizId: string;
+      };
+    }) => addQuestions(payload),
   });
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: QuestionFormValues) => {
     try {
       if (!quizId) return;
 
@@ -63,7 +71,7 @@ export default function NewQuizPage() {
             payload: {
               quizId,
               ...q,
-              options: q.type === "mcq" ? q.options.map((c) => c.value) : [],
+              options: q.type === "mcq" ? q.options : [],
             },
           });
         })
@@ -90,7 +98,7 @@ export default function NewQuizPage() {
     return <SkeletonLoader />;
   }
 
-  if (isError) return <ErrorCard error={error} />;
+  if (isError) return <ErrorCard error={error.toString()} />;
 
   if (!userType) router.replace("/");
 

@@ -7,13 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { FormValues } from "./types";
+import { QuestionFormValues } from "@/lib/types";
 
 export default function Choices({
   control,
   questionIndex,
 }: {
-  control: Control<FormValues>;
+  control: Control<QuestionFormValues>;
   questionIndex: number;
 }) {
   const { fields, append, remove } = useFieldArray({

@@ -15,6 +15,7 @@ import SkeletonLoader from "@/app/components/skeleton-loader";
 import ErrorCard from "@/app/components/error-card";
 
 import { fetchQuizById } from "@/lib/api";
+import { QuestionFromDB } from "@/lib/types";
 
 export default function ViewQuizPage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function ViewQuizPage() {
     return <SkeletonLoader />;
   }
 
-  if (isError) return <ErrorCard error={error} />;
+  if (isError) return <ErrorCard error={error.toString()} />;
 
   if (!userType) router.replace("/");
 
@@ -70,8 +71,7 @@ export default function ViewQuizPage() {
             </Button>
           </div>
         ) : (
-          // TODO: Fix types
-          data.questions.map((d: any, i: any) => (
+          data.questions.map((d: QuestionFromDB, i: number) => (
             <Card className="mt-3 mb-8 last:mb-0">
               <CardContent>
                 <div className="flex items-center gap-3 mb-3">
@@ -80,7 +80,7 @@ export default function ViewQuizPage() {
                 </div>
 
                 {d.options &&
-                  d.options.map((o: any) => (
+                  d.options.map((o) => (
                     <Button
                       variant={o === d.correctAnswer ? "default" : "outline"}
                       className="p-6 w-full justify-start mb-3 pointer-events-none"

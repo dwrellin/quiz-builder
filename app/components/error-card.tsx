@@ -3,7 +3,7 @@ import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
 
-export default function ErrorCard({ error }: { error?: any }) {
+export default function ErrorCard({ error }: { error?: string }) {
   return (
     <Card className="gap-2 w-full max-w-xl">
       <CardHeader className="flex flex-col items-center">

@@ -4,22 +4,26 @@ import * as React from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 import ErrorCard from "@/app/components/error-card";
 import SkeletonLoader from "@/app/components/skeleton-loader";
 import { useQuizContext } from "@/app/providers/context-provider";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-
 import { answerQuestionById, fetchQuizById } from "@/lib/api";
+import { QuizAnswer } from "@/lib/types";
+
+type FormValues = {
+  answer: string;
+};
 
 export default function QuizPlayerPage() {
   const params = useParams();
@@ -33,7 +37,8 @@ export default function QuizPlayerPage() {
 
   const { userType } = useQuizContext();
 
-  const { register, watch, setValue, reset, handleSubmit } = useForm();
+  const { register, watch, setValue, reset, handleSubmit } =
+    useForm<FormValues>();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["quiz", quizId],
@@ -44,8 +49,13 @@ export default function QuizPlayerPage() {
   });
 
   const quizMutation = useMutation({
-    mutationFn: ({ attemptId, payload }: { attemptId: string; payload: any }) =>
-      answerQuestionById(attemptId, payload),
+    mutationFn: ({
+      attemptId,
+      payload,
+    }: {
+      attemptId: string;
+      payload: QuizAnswer;
+    }) => answerQuestionById(attemptId, payload),
     onSuccess: () => {
       if (!quizId || !qNumber) return;
       reset();
@@ -66,11 +76,12 @@ export default function QuizPlayerPage() {
   });
 
   if (isLoading) return <SkeletonLoader />;
-  if (isError) return <ErrorCard error={error} />;
+  if (isError) return <ErrorCard error={error.toString()} />;
 
   const qNumIndex = +qNumber! - 1;
 
-  const onSubmit = (d: any) => {
+  // TODO: Fix types
+  const onSubmit: SubmitHandler<FormValues> = (d) => {
     if (!qNumber || !attemptId) return;
 
     if (!d.answer) {
@@ -78,7 +89,7 @@ export default function QuizPlayerPage() {
       return;
     }
 
-    const payload = {
+    const payload: QuizAnswer = {
       questionId: data.questions[+qNumber - 1].id,
       value: d.answer,
     };
@@ -114,7 +125,7 @@ export default function QuizPlayerPage() {
                   </div>
 
                   {data.questions[qNumIndex].options ? (
-                    data.questions[qNumIndex].options.map((o: any) => (
+                    data.questions[qNumIndex].options.map((o: string) => (
                       <Button
                         type="button"
                         onClick={() =>
