@@ -59,3 +59,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 As of Oct 3, 2025
 
 - Refined type definitions to eliminate use of any.
+
+As of Oct 4, 2025
+
+- HOTFIX: Resolved a type error that caused crashes when viewing or taking a quiz.
+- HOTFIX: Corrected the `payload` structure sent to the `addQuestions` API.
