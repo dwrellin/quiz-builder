@@ -80,7 +80,6 @@ export default function QuizPlayerPage() {
 
   const qNumIndex = +qNumber! - 1;
 
-  // TODO: Fix types
   const onSubmit: SubmitHandler<FormValues> = (d) => {
     if (!qNumber || !attemptId) return;
 
@@ -125,18 +124,26 @@ export default function QuizPlayerPage() {
                   </div>
 
                   {data.questions[qNumIndex].options ? (
-                    data.questions[qNumIndex].options.map((o: string) => (
-                      <Button
-                        type="button"
-                        onClick={() =>
-                          setValue("answer", o, { shouldValidate: true })
-                        }
-                        variant={selected === o ? "default" : "outline"}
-                        className="cursor-pointer p-6 w-full justify-start mb-3"
-                      >
-                        {o}
-                      </Button>
-                    ))
+                    data.questions[qNumIndex].options.map(
+                      (o: string | { value: string }) => {
+                        const value = typeof o !== "string" ? o.value : o;
+
+                        return (
+                          <Button
+                            type="button"
+                            onClick={() =>
+                              setValue("answer", value, {
+                                shouldValidate: true,
+                              })
+                            }
+                            variant={selected === value ? "default" : "outline"}
+                            className="cursor-pointer p-6 w-full justify-start mb-3"
+                          >
+                            {value}
+                          </Button>
+                        );
+                      }
+                    )
                   ) : (
                     <div className="mt-5 grid gap-3">
                       <Label>Your answer:</Label>

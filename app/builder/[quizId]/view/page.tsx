@@ -72,7 +72,7 @@ export default function ViewQuizPage() {
           </div>
         ) : (
           data.questions.map((d: QuestionFromDB, i: number) => (
-            <Card className="mt-3 mb-8 last:mb-0">
+            <Card key={i} className="mt-3 mb-8 last:mb-0">
               <CardContent>
                 <div className="flex items-center gap-3 mb-3">
                   <p className="font-bold text-3xl">{i + 1}</p>
@@ -80,8 +80,9 @@ export default function ViewQuizPage() {
                 </div>
 
                 {d.options &&
-                  d.options.map((o) => (
+                  d.options.map((o, i: number) => (
                     <Button
+                      key={i}
                       variant={o === d.correctAnswer ? "default" : "outline"}
                       className="p-6 w-full justify-start mb-3 pointer-events-none"
                     >
