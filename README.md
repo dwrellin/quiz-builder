@@ -53,4 +53,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - It doesn't support going back to questions you've previously answered.
 - It doesn't accept indices as answers in MCQ questions/prompts. It only accepts the string equivalent.
 - I wasn't able to add `code` as a question type.
-- Some of the components use `any` as type 😅
+
+## Changelog:
+
+As of Oct 3, 2025
+
+- Refined type definitions to eliminate use of any.
