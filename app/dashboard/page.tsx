@@ -64,7 +64,7 @@ export default function DashboardPage() {
     setActiveQuizId(quizId);
 
     if (!quizId) return;
-    quizMutation.mutateAsync(quizId);
+    quizMutation.mutate(quizId);
   };
 
   if (isLoading) return <SkeletonLoader />;
